@@ -6,7 +6,7 @@ import App from "./App";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
-import { WishlistProvider } from "./contexts/WishlistContext";
+import { WishlistProvider } from "./contexts/WishListContext";
 
 import "./index.css";
 
