@@ -9,26 +9,32 @@ import couponRoutes from "./routes/couponRoutes.js";
 
 const app = express();
 
-// Whitelist local frontend and live production domain
+// Whitelist local frontend and live production domain (filtering out undefined values)
 const allowedOrigins = [
   "http://localhost:5173",
   "https://saviour-s-kitchen.vercel.app",
   process.env.CLIENT_URL,
-];
+].filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow server-to-server requests or matching origins
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy error: Origin not allowed"));
-      }
-    },
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS policy error: Origin not allowed"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+};
+
+// Handle preflight OPTIONS requests for all routes
+app.options("*", cors(corsOptions));
+
+// Apply main CORS middleware
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -58,7 +64,7 @@ app.use((error, req, res, next) => {
 
   res.status(500).json({
     success: false,
-    message: "Internal server error.",
+    message: error.message || "Internal server error.",
   });
 });
 
