@@ -9,32 +9,27 @@ import couponRoutes from "./routes/couponRoutes.js";
 
 const app = express();
 
-// Whitelist local frontend and live production domain (filtering out undefined values)
 const allowedOrigins = [
   "http://localhost:5173",
   "https://saviour-s-kitchen.vercel.app",
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS policy error: Origin not allowed"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-};
-
-// Handle preflight OPTIONS requests for all routes
-app.options("*", cors(corsOptions));
-
-// Apply main CORS middleware
-app.use(cors(corsOptions));
+// Apply CORS globally to all routes (including automatic preflight OPTIONS handling)
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS policy error: Origin not allowed"));
+      }
+    },
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
 
 app.use(express.json());
 
