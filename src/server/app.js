@@ -12,6 +12,7 @@ const app = express();
 // Whitelist local frontend and live production domain
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://saviour-s-kitchen.vercel.app",
   process.env.CLIENT_URL,
 ];
 
