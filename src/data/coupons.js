@@ -1,0 +1,32 @@
+export const COUPONS = [
+  {
+    id: "welcome10",
+    code: "WELCOME10",
+    title: "Welcome Discount",
+    description: "Get 10% off your first order.",
+    type: "percentage",
+    value: 10,
+    minimumOrder: 5000,
+    active: true,
+  },
+  {
+    id: "save2000",
+    code: "SAVE2000",
+    title: "Save ₦2,000",
+    description: "Get ₦2,000 off orders of ₦15,000 or more.",
+    type: "fixed",
+    value: 2000,
+    minimumOrder: 15000,
+    active: true,
+  },
+  {
+    id: "freeshipping",
+    code: "FREEDELIVERY",
+    title: "Free Delivery",
+    description: "Enjoy free delivery on qualifying orders.",
+    type: "free_delivery",
+    value: 0,
+    minimumOrder: 10000,
+    active: true,
+  },
+];
