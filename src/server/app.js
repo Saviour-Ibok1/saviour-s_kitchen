@@ -15,11 +15,19 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
-// Apply CORS globally to all routes (including automatic preflight OPTIONS handling)
+// Apply CORS globally with support for Vercel preview subdomains
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow non-browser requests (e.g., Postman, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Check if origin matches allowed list or any .vercel.app deployment URL
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app");
+
+      if (isAllowed) {
         callback(null, true);
       } else {
         callback(new Error("CORS policy error: Origin not allowed"));
